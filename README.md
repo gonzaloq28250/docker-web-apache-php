@@ -19,6 +19,9 @@ echo "WWW_PATH=D:/mis-proyectos/www" > .env
 
 # Iniciar
 docker compose -f docker/docker-compose.yml up -d
+
+# Probar
+curl http://localhost/
 ```
 
 ## Configuración
