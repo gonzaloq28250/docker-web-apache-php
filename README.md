@@ -19,9 +19,6 @@ echo "WWW_PATH=D:/mis-proyectos/www" > .env
 
 # Iniciar
 docker compose -f docker/docker-compose.yml up -d
-
-# Abrir en navegador
-# http://localhost/Generico(copia-nequi)/AVI-Dashboard-level/dashboard_consolidado.php
 ```
 
 ## Configuración
