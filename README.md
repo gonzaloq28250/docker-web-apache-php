@@ -25,12 +25,15 @@ docker compose -f docker/docker-compose.yml up -d
 
 ### Variable WWW_PATH
 
-Por defecto el document root apunta a `./www` (dentro del repo).
-Para usar un directorio existente, crea un archivo `.env`:
+Por defecto el document root apunta a `www/` (en la raíz del repo).
+Para usar un directorio existente, crea un archivo `.env` en la **raíz del repo**:
 
 ```env
 WWW_PATH=C:/ruta/a/tu/www
 ```
+
+> El `.env` debe estar en la misma carpeta desde donde ejecutas `docker compose`,
+> normalmente la raíz del repo (`repo-root/.env`), no dentro de `docker/`.
 
 ### Archivos config.php
 
