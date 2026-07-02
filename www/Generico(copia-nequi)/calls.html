@@ -1,0 +1,64 @@
+<?php
+$mysqli = new mysqli("icqdbmysqlreports.mysql.database.azure.com", "gonzaloq", "73ch$iCC", "n8n_icq");
+
+// Consulta dinámica para pivotear los datos
+$query = "
+SELECT F9CallID,
+       MAX(CASE WHEN clave = 'PROYECTO' THEN valor END) AS PROYECTO,
+       MAX(CASE WHEN clave = 'ANI' THEN valor END) AS ANI,
+       MAX(CASE WHEN clave = 'DNIS' THEN valor END) AS DNIS,
+       MAX(CASE WHEN clave = 'F9TimeStamp' THEN valor END) AS F9TimeStamp,
+       MAX(CASE WHEN clave = 'F911DNIS' THEN valor END) AS F911DNIS,
+       MAX(CASE WHEN clave = 'nombre_contacto' THEN valor END) AS nombre_contacto,
+       MAX(CASE WHEN clave = 'seguimiento' THEN valor END) AS seguimiento,
+       MAX(CASE WHEN clave = 'numero_contacto' THEN valor END) AS numero_contacto
+FROM siigo_lead_data_v2
+WHERE method = 'Insert Call'
+GROUP BY F9CallID
+ORDER BY F9TimeStamp DESC
+";
+
+$result = $mysqli->query($query);
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leads Insert Call</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Registros de Insert Call</h1>
+    <table>
+        <tr>
+            <th>F9CallID</th>
+            <th>PROYECTO</th>
+            <th>ANI</th>
+            <th>DNIS</th>
+            <th>F9TimeStamp</th>
+            <th>F911DNIS</th>
+            <th>Nombre Contacto</th>
+            <th>Seguimiento</th>
+            <th>Numero Contacto</th>
+        </tr>
+        <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+            <td><?= htmlspecialchars($row['F9CallID']) ?></td>
+            <td><?= htmlspecialchars($row['PROYECTO']) ?></td>
+            <td><?= htmlspecialchars($row['ANI']) ?></td>
+            <td><?= htmlspecialchars($row['DNIS']) ?></td>
+            <td><?= htmlspecialchars($row['F9TimeStamp']) ?></td>
+            <td><?= htmlspecialchars($row['F911DNIS']) ?></td>
+            <td><?= htmlspecialchars($row['nombre_contacto']) ?></td>
+            <td><?= htmlspecialchars($row['seguimiento']) ?></td>
+            <td><?= htmlspecialchars($row['numero_contacto']) ?></td>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<?php
+/**
+ * Archivo de configuración central para el dashboard
+ *
+ * COPIA este archivo como config.php en cada subdirectorio de www/
+ * y reemplaza los valores con tus credenciales reales.
+ */
+
+define('CLIENTE_ACTUAL', 'NEQUI');
+define('DASHBOARD_TITLE', 'Dashboard de Llamadas - ICQ24-NEQUI');
+
+// Configuración de base de datos
+define('DB_HOST', 'icqdbmysqlreports.mysql.database.azure.com');
+define('DB_NAME', 'n8n_icq');
+define('DB_USER', 'tu_usuario');
+define('DB_PASS', 'tu_contraseña');
+define('DB_CHARSET', 'utf8mb4');
+
+function getDBConnection() {
+    try {
+        $pdo = new PDO(
+            'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET,
+            DB_USER,
+            DB_PASS,
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]
+        );
+        return $pdo;
+    } catch (PDOException $e) {
+        die(json_encode(['success' => false, 'error' => 'Error de conexión: ' . $e->getMessage()]));
+    }
+}

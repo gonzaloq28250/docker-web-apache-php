@@ -1,0 +1,21 @@
+# Archivos de configuración con credenciales (todas las copias)
+**/config.php
+**/alerta_15min_config.json
+.env
+
+# Backups y temporales
+**/*.bak*
+**/*backup*
+**/BKP_*
+
+# OS
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+.claude/
+
+# Docker runtime
+docker-data/
