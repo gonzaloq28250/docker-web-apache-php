@@ -1,82 +1,92 @@
 # Docker Web Apache PHP
 
-Contenedor Docker con Apache 2.4 + PHP 8.3 como reemplazo portable de Laragon para desarrollo local.
+Contenedor Docker con Apache 2.4 + PHP 8.3 como reemplazo portable de Laragon.
 
 ## Requisitos
 
-- Docker Desktop (Windows) o Docker Engine (Linux)
-- Git
+- [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) (Windows)
+- [Git](https://git-scm.com/download/win)
 
-## Uso rápido
+## Instalación paso a paso (Windows)
+
+### 1. Abrir **CMD como Administrador**
+
+### 2. Clonar el repositorio
 
 ```cmd
+cd C:\
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
 cd docker-web-apache-php
+```
 
-REM (opcional) Usar carpeta www existente
-echo WWW_PATH=C:/ruta/a/tu/www > .env
+### 3. (Opcional) Usar una carpeta www existente
 
-REM Iniciar
+Si ya tienes proyectos en otra carpeta (ej. `C:\gqa\www`), crea el archivo `.env`:
+
+```cmd
+echo WWW_PATH=C:\gqa\www > .env
+```
+
+Si **no** creas el `.env`, usará la carpeta `www/` que está dentro del repositorio.
+
+### 4. Iniciar el contenedor
+
+```cmd
 docker compose up -d
+```
 
-REM Probar
+La primera vez descargará e instalará todo (~5-10 minutos).
+
+### 5. Probar
+
+```cmd
 curl http://localhost/
 ```
 
-## Configuración
+Deberías ver una página de estado con "Operativo" y PHP 8.3.
 
-### Variable WWW_PATH
+### 6. Agregar tus proyectos
 
-Por defecto el document root apunta a `www/` (dentro del repo).
-Para usar un directorio existente, crea un archivo `.env` en la raíz del repo:
-
-```env
-WWW_PATH=C:/ruta/a/tu/www
-```
-
-### Archivos config.php
-
-Los archivos `config.php` con credenciales reales están excluidos del repo.
-Usa `config.php.example` como plantilla y créalos localmente en cada
-subdirectorio de `www/` que los necesite.
-
-## Servicios
-
-| Puerto | Servicio  |
-|--------|-----------|
-| 80     | HTTP      |
-| 443    | HTTPS     |
-
-## Troubleshooting
-
-### `exec /usr/local/bin/entrypoint.sh: no such file or directory`
-
-El archivo `entrypoint.sh` tiene saltos de línea Windows (CRLF) en lugar de
-Unix (LF). Solución:
+Crea carpetas dentro de tu `www` (el que definiste en el paso 3 o el del repo):
 
 ```cmd
-REM Re-clonar (el .gitattributes ya corrige el problema)
-rmdir /s /q docker-web-apache-php
+mkdir www\miproyecto
+echo ^<?php phpinfo(); ^> > www\miproyecto\index.php
+```
+
+Abre `http://localhost/miproyecto/index.php`
+
+### 7. Detener el contenedor
+
+```cmd
+docker compose down
+```
+
+## Solución de problemas
+
+### Error: `exec /usr/local/bin/entrypoint.sh: no such file or directory`
+
+```cmd
+rmdir /s /q C:\docker-web-apache-php
+cd C:\
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
 cd docker-web-apache-php
+echo WWW_PATH=C:\gqa\www > .env
 docker compose up -d
 ```
 
-### Puerto 80 ocupado
+### Error: `port is already allocated` (puerto 80 ocupado)
 
-Si otro programa (IIS, World Wide Web Publishing, Skype) usa el puerto 80,
-cambia el mapeo en `docker-compose.yml`:
+En `docker-compose.yml` cambia:
 
 ```yaml
 ports:
   - "8080:80"
 ```
 
-Luego abre `http://localhost:8080/`.
+Luego inicia y abre `http://localhost:8080/`.
 
-### `docker compose` no encontrado
-
-Usa la sintaxis clásica con guión:
+### Error: `'docker compose' no se reconoce`
 
 ```cmd
 docker-compose up -d
