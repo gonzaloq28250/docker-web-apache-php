@@ -13,11 +13,11 @@ Contenedor Docker con Apache 2.4 + PHP 8.3 como reemplazo portable de Laragon pa
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
 cd docker-web-apache-php
 
-REM Usar ruta www personalizada (opcional)
-echo WWW_PATH=D:/mis-proyectos/www > .env
+REM (opcional) Usar carpeta www existente
+echo WWW_PATH=C:/ruta/a/tu/www > .env
 
 REM Iniciar
-docker compose -f docker/docker-compose.yml up -d
+docker compose up -d
 
 REM Probar
 curl http://localhost/
@@ -27,15 +27,12 @@ curl http://localhost/
 
 ### Variable WWW_PATH
 
-Por defecto el document root apunta a `www/` (en la raíz del repo).
-Para usar un directorio existente, crea un archivo `.env` en la **raíz del repo**:
+Por defecto el document root apunta a `www/` (dentro del repo).
+Para usar un directorio existente, crea un archivo `.env` en la raíz del repo:
 
 ```env
 WWW_PATH=C:/ruta/a/tu/www
 ```
-
-> El `.env` debe estar en la misma carpeta desde donde ejecutas `docker compose`,
-> normalmente la raíz del repo (`repo-root/.env`), no dentro de `docker/`.
 
 ### Archivos config.php
 
@@ -58,33 +55,31 @@ El archivo `entrypoint.sh` tiene saltos de línea Windows (CRLF) en lugar de
 Unix (LF). Solución:
 
 ```cmd
-REM Opción 1 (recomendado): re-clonar con la nueva configuración
+REM Re-clonar (el .gitattributes ya corrige el problema)
 rmdir /s /q docker-web-apache-php
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
 cd docker-web-apache-php
-docker compose -f docker/docker-compose.yml up -d
-
-REM Opción 2: corregir sin re-clonar
-git add --renormalize docker/entrypoint.sh
-docker compose -f docker/docker-compose.yml build --no-cache
+docker compose up -d
 ```
 
 ### Puerto 80 ocupado
 
-Si otro programa (IIS, World Wide Web Publishing, Skype) usa el puerto 80:
+Si otro programa (IIS, World Wide Web Publishing, Skype) usa el puerto 80,
+cambia el mapeo en `docker-compose.yml`:
 
-```cmd
-REM Cambiar el puerto en docker/docker-compose.yml
-REM "8080:80" en lugar de "80:80"
-REM Luego abrir http://localhost:8080/
+```yaml
+ports:
+  - "8080:80"
 ```
+
+Luego abre `http://localhost:8080/`.
 
 ### `docker compose` no encontrado
 
 Usa la sintaxis clásica con guión:
 
 ```cmd
-docker-compose -f docker/docker-compose.yml up -d
+docker-compose up -d
 ```
 
 ## SSL
