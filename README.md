@@ -9,18 +9,17 @@ Contenedor Docker con Apache 2.4 + PHP 8.3 como reemplazo portable de Laragon pa
 
 ## Uso rápido
 
-```bash
-# Clonar
+```cmd
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
 cd docker-web-apache-php
 
-# Usar ruta www personalizada (opcional)
-echo "WWW_PATH=D:/mis-proyectos/www" > .env
+REM Usar ruta www personalizada (opcional)
+echo WWW_PATH=D:/mis-proyectos/www > .env
 
-# Iniciar
+REM Iniciar
 docker compose -f docker/docker-compose.yml up -d
 
-# Probar
+REM Probar
 curl http://localhost/
 ```
 
@@ -58,12 +57,14 @@ subdirectorio de `www/` que los necesite.
 El archivo `entrypoint.sh` tiene saltos de línea Windows (CRLF) en lugar de
 Unix (LF). Solución:
 
-```bash
-# Opción 1 (recomendado): re-clonar con la nueva configuración
-rm -rf docker-web-apache-php
+```cmd
+REM Opción 1 (recomendado): re-clonar con la nueva configuración
+rmdir /s /q docker-web-apache-php
 git clone https://github.com/gonzaloq28250/docker-web-apache-php.git
+cd docker-web-apache-php
+docker compose -f docker/docker-compose.yml up -d
 
-# Opción 2: corregir sin re-clonar
+REM Opción 2: corregir sin re-clonar
 git add --renormalize docker/entrypoint.sh
 docker compose -f docker/docker-compose.yml build --no-cache
 ```
@@ -72,17 +73,17 @@ docker compose -f docker/docker-compose.yml build --no-cache
 
 Si otro programa (IIS, World Wide Web Publishing, Skype) usa el puerto 80:
 
-```bash
-# Cambiar el puerto en docker/docker-compose.yml
-# "8080:80" en lugar de "80:80"
-# Luego abrir http://localhost:8080/
+```cmd
+REM Cambiar el puerto en docker/docker-compose.yml
+REM "8080:80" en lugar de "80:80"
+REM Luego abrir http://localhost:8080/
 ```
 
 ### `docker compose` no encontrado
 
 Usa la sintaxis clásica con guión:
 
-```bash
+```cmd
 docker-compose -f docker/docker-compose.yml up -d
 ```
 
